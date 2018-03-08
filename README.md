@@ -40,6 +40,7 @@ TODO
 ## Variations
 
 The template comes in two variations:
+
 | Variation | Description | Status |
 | --- | --- | --- |
 | Single VM | Consists of one VM with UCP and DTR installed together | 0.1 |
