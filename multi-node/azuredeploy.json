@@ -75,7 +75,8 @@
       }
     },
     "scripts": {
-      "installDockerEE": "https://<resolveable install-docker-ee.sh>"
+      "installDockerEE": "https://<resolveable install-docker-ee.sh>",
+      "installUCP": "https://<resolveable install-docker-ee.sh>"
     },
     "api": {
       "availabilitySets": "2015-06-15",
@@ -677,15 +678,16 @@
           "displayName": "InstallDocker"
         },
         "properties": {
-          "publisher": "Microsoft.OSTCExtensions",
-          "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.5",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('scripts').installDockerEE]"
+              "[variables('scripts').installDockerEE]",
+              "[variables('scripts').installUCP]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'))]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Manager')]"
           }
         }
       }]
@@ -739,6 +741,7 @@
         "location": "[resourceGroup().location]",
         "apiVersion": "[variables('api').virtualMachines]",
         "dependsOn": [
+          "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'manager-01', 'InstallDockerEE')]",
           "[resourceId('Microsoft.Compute/virtualMachines', concat('manager-', padLeft(copyIndex(2), 2, '0')))]",
           "[resourceId('Microsoft.Network/publicIPAddresses', 'ucp')]"
         ],
@@ -746,15 +749,16 @@
           "displayName": "InstallDocker"
         },
         "properties": {
-          "publisher": "Microsoft.OSTCExtensions",
-          "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.5",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('scripts').installDockerEE]"
+              "[variables('scripts').installDockerEE]",
+              "[variables('scripts').installUCP]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'))]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Manager')]"
           }
         }
       }]
@@ -804,6 +808,7 @@
         "location": "[resourceGroup().location]",
         "apiVersion": "[variables('api').virtualMachines]",
         "dependsOn": [
+          "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'manager-01', 'InstallDockerEE')]",
           "[resourceId('Microsoft.Compute/virtualMachines', 'dtr-01')]",
           "[resourceId('Microsoft.Network/publicIPAddresses', 'dtr')]"
         ],
@@ -811,15 +816,16 @@
           "displayName": "InstallDocker"
         },
         "properties": {
-          "publisher": "Microsoft.OSTCExtensions",
-          "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.5",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('scripts').installDockerEE]"
+              "[variables('scripts').installDockerEE]",
+              "[variables('scripts').installUCP]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'))]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker')]"
           }
         }
       }]
@@ -873,6 +879,7 @@
         "location": "[resourceGroup().location]",
         "apiVersion": "[variables('api').virtualMachines]",
         "dependsOn": [
+          "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'manager-01', 'InstallDockerEE')]",
           "[resourceId('Microsoft.Compute/virtualMachines', concat('dtr-', padLeft(copyIndex(2), 2, '0')))]",
           "[resourceId('Microsoft.Network/publicIPAddresses', 'dtr')]"
         ],
@@ -880,15 +887,16 @@
           "displayName": "InstallDocker"
         },
         "properties": {
-          "publisher": "Microsoft.OSTCExtensions",
-          "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.5",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('scripts').installDockerEE]"
+              "[variables('scripts').installDockerEE]",
+              "[variables('scripts').installUCP]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'))]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker')]"
           }
         }
       }]
@@ -942,6 +950,7 @@
         "location": "[resourceGroup().location]",
         "apiVersion": "[variables('api').virtualMachines]",
         "dependsOn": [
+          "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'manager-01', 'InstallDockerEE')]",
           "[resourceId('Microsoft.Compute/virtualMachines', concat('worker-linux-', padLeft(copyIndex(1), 2, '0')))]",
           "[resourceId('Microsoft.Network/publicIPAddresses', 'apps')]"
         ],
@@ -949,19 +958,25 @@
           "displayName": "InstallDocker"
         },
         "properties": {
-          "publisher": "Microsoft.OSTCExtensions",
-          "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.5",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('scripts').installDockerEE]"
+              "[variables('scripts').installDockerEE]",
+              "[variables('scripts').installUCP]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'))]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker')]"
           }
         }
       }]
     }
   ],
-  "outputs": {}
+  "outputs": {
+    "ucpFQDN": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn]"
+    }
+  }
 }
