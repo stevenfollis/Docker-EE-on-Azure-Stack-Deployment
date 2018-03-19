@@ -75,8 +75,9 @@
       }
     },
     "scripts": {
-      "installDockerEE": "https://<resolveable install-docker-ee.sh>",
-      "installUCP": "https://<resolveable install-docker-ee.sh>"
+      "installDockerEE": "https://follisutility.blob.core.windows.net/stack/install-docker-ee.sh?st=2018-03-17T07%3A37%3A00Z&se=2018-04-18T07%3A37%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=4uxzcmn1OkJOGfKGzInoGwbpY5oOG99hVsNOSG%2BnhfE%3D",
+      "installUCP": "https://follisutility.blob.core.windows.net/stack/install-ucp.sh?st=2018-03-17T03%3A37%3A00Z&se=2018-04-18T03%3A37%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=ujmWLri4%2BtFPFjBSWsdHgY0W9GsHu2DlWXIaoU2bqFg%3D",
+      "installDTR": "https://follisutility.blob.core.windows.net/stack/install-dtr.sh?st=2018-03-16T19%3A37%3A00Z&se=2018-04-17T19%3A37%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=5kxug6PWr0f0RBWAkdTVirspBUFOszkwQu4O539R2Es%3D"
     },
     "api": {
       "availabilitySets": "2015-06-15",
@@ -93,6 +94,9 @@
       "name": "[toLower(variables('shared').storage.name)]",
       "apiVersion": "[variables('api').storageAccounts]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "StorageAccount"
+      },
       "properties": {
         "accountType": "[variables('shared').storage.type]"
       }
@@ -103,7 +107,7 @@
       "name": "vnet",
       "location": "[resourceGroup().location]",
       "tags": {
-        "displayName": "VirtualNetwork"
+        "displayName": "Virtual Network"
       },
       "properties": {
         "addressSpace": {
@@ -117,6 +121,9 @@
       "name": "[variables('managers').avSet]",
       "apiVersion": "[variables('api').availabilitySets]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "Availability Set - Managers"
+      },
       "properties": {
         "platformFaultDomainCount": 2,
         "platformUpdateDomainCount": 5
@@ -127,6 +134,9 @@
       "name": "[variables('dtr').avSet]",
       "apiVersion": "[variables('api').availabilitySets]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "Availability Set - DTR"
+      },
       "properties": {
         "platformFaultDomainCount": 2,
         "platformUpdateDomainCount": 5
@@ -137,6 +147,9 @@
       "name": "[variables('workers-linux').avSet]",
       "apiVersion": "[variables('api').availabilitySets]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "Availability Set - Workers (Linux)"
+      },
       "properties": {
         "platformFaultDomainCount": 2,
         "platformUpdateDomainCount": 5
@@ -147,6 +160,9 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "ucp",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "PIP - UCP"
+      },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
@@ -159,6 +175,9 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[concat('manager-', padLeft(copyIndex(1), 2, '0'))]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "PIP - Managers"
+      },
       "copy": {
         "name": "PIPCopy",
         "count": "[variables('managers').instances]"
@@ -175,6 +194,9 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "dtr",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "PIP - DTR"
+      },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
@@ -187,6 +209,9 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[concat('dtr-', padLeft(copyIndex(1), 2, '0'))]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "PIP - DTR Workers"
+      },
       "copy": {
         "name": "PIPCopy",
         "count": "[variables('dtr').instances]"
@@ -203,6 +228,9 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "apps",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "PIP - Apps"
+      },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
@@ -215,6 +243,9 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[concat('worker-linux-', padLeft(copyIndex(1), 2, '0'))]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "PIP - Linux Workers"
+      },
       "copy": {
         "name": "PIPCopy",
         "count": "[variables('workers-linux').instances]"
@@ -231,6 +262,9 @@
       "name": "ucp",
       "apiVersion": "[variables('api').loadBalancers]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "LB - UCP"
+      },
       "properties": {
         "frontendIPConfigurations": [{
           "name": "LoadBalancerFrontEnd",
@@ -314,6 +348,9 @@
       "name": "dtr",
       "apiVersion": "[variables('api').loadBalancers]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "LB - DTR"
+      },
       "properties": {
         "frontendIPConfigurations": [{
           "name": "LoadBalancerFrontEnd",
@@ -426,6 +463,9 @@
       "name": "apps",
       "apiVersion": "[variables('api').loadBalancers]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "LB - Apps"
+      },
       "properties": {
         "frontendIPConfigurations": [{
           "name": "LoadBalancerFrontEnd",
@@ -538,6 +578,9 @@
       "name": "[concat('manager-', padLeft(copyIndex(1), 2, '0'))]",
       "apiVersion": "[variables('api').networkInterfaces]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NIC - Managers"
+      },
       "copy": {
         "name": "NICCopy",
         "count": "[variables('managers').instances]"
@@ -569,6 +612,9 @@
       "name": "[concat('dtr-', padLeft(copyIndex(1), 2, '0'))]",
       "apiVersion": "[variables('api').networkInterfaces]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NIC - DTRs"
+      },
       "copy": {
         "name": "NICCopy",
         "count": "[variables('dtr').instances]"
@@ -600,6 +646,9 @@
       "name": "[concat('worker-linux-', padLeft(copyIndex(1), 2, '0'))]",
       "apiVersion": "[variables('api').networkInterfaces]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "NIC - Linux Workers"
+      },
       "copy": {
         "name": "NICCopy",
         "count": "[variables('workers-linux').instances]"
@@ -631,6 +680,9 @@
       "name": "manager-01",
       "apiVersion": "[variables('api').virtualMachines]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "VM - Manager01"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('managers').vmSize]"
@@ -701,6 +753,9 @@
       "name": "[concat('manager-', padLeft(copyIndex(2), 2, '0'))]",
       "apiVersion": "[variables('api').virtualMachines]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "VM - Managers"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('managers').vmSize]"
@@ -768,6 +823,9 @@
       "name": "dtr-01",
       "apiVersion": "[variables('api').virtualMachines]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "VM - DTR01"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('dtr').vmSize]"
@@ -823,9 +881,10 @@
           "settings": {
             "fileUris": [
               "[variables('scripts').installDockerEE]",
-              "[variables('scripts').installUCP]"
+              "[variables('scripts').installUCP]",
+              "[variables('scripts').installDTR]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker')]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker', ' && sh install-dtr.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'dtr')).dnsSettings.fqdn)]"
           }
         }
       }]
@@ -839,6 +898,9 @@
       "name": "[concat('dtr-', padLeft(copyIndex(2), 2, '0'))]",
       "apiVersion": "[variables('api').virtualMachines]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "VM - DTRs"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('dtr').vmSize]"
@@ -879,7 +941,7 @@
         "location": "[resourceGroup().location]",
         "apiVersion": "[variables('api').virtualMachines]",
         "dependsOn": [
-          "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'manager-01', 'InstallDockerEE')]",
+          "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dtr-01', 'InstallDockerEE')]",
           "[resourceId('Microsoft.Compute/virtualMachines', concat('dtr-', padLeft(copyIndex(2), 2, '0')))]",
           "[resourceId('Microsoft.Network/publicIPAddresses', 'dtr')]"
         ],
@@ -894,9 +956,10 @@
           "settings": {
             "fileUris": [
               "[variables('scripts').installDockerEE]",
-              "[variables('scripts').installUCP]"
+              "[variables('scripts').installUCP]",
+              "[variables('scripts').installDTR]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker')]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker', ' && sh install-dtr.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'dtr')).dnsSettings.fqdn)]"
           }
         }
       }]
@@ -910,6 +973,9 @@
       "name": "[concat('worker-linux-', padLeft(copyIndex(1), 2, '0'))]",
       "apiVersion": "[variables('api').virtualMachines]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "VM - Linux Workers"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('workers-linux').vmSize]"
