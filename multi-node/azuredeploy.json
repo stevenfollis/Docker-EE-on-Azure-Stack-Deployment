@@ -15,6 +15,14 @@
           "windows": 0
         }
       }
+    },
+    "scripts": {
+      "type": "object",
+      "defaultValue": {
+        "installDockerEE": "https://raw.githubusercontent.com/Microsoft/Docker-EE-on-Azure-Stack-Deployment/master/multi-node/install-docker-ee.sh",
+        "installUCP": "https://raw.githubusercontent.com/Microsoft/Docker-EE-on-Azure-Stack-Deployment/master/multi-node/install-ucp.sh",
+        "installDTR": "https://raw.githubusercontent.com/Microsoft/Docker-EE-on-Azure-Stack-Deployment/master/multi-node/install-dtr.sh"
+      }
     }
   },
   "variables": {
@@ -73,11 +81,6 @@
         "sku": "16.04-LTS",
         "version": "latest"
       }
-    },
-    "scripts": {
-      "installDockerEE": "https://follisutility.blob.core.windows.net/stack/install-docker-ee.sh?st=2018-03-17T07%3A37%3A00Z&se=2018-04-18T07%3A37%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=4uxzcmn1OkJOGfKGzInoGwbpY5oOG99hVsNOSG%2BnhfE%3D",
-      "installUCP": "https://follisutility.blob.core.windows.net/stack/install-ucp.sh?st=2018-03-17T03%3A37%3A00Z&se=2018-04-18T03%3A37%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=ujmWLri4%2BtFPFjBSWsdHgY0W9GsHu2DlWXIaoU2bqFg%3D",
-      "installDTR": "https://follisutility.blob.core.windows.net/stack/install-dtr.sh?st=2018-03-16T19%3A37%3A00Z&se=2018-04-17T19%3A37%3A00Z&sp=rl&sv=2017-04-17&sr=b&sig=5kxug6PWr0f0RBWAkdTVirspBUFOszkwQu4O539R2Es%3D"
     },
     "api": {
       "availabilitySets": "2015-06-15",
@@ -736,8 +739,8 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('scripts').installDockerEE]",
-              "[variables('scripts').installUCP]"
+              "[parameters('scripts').installDockerEE]",
+              "[parameters('scripts').installUCP]"
             ],
             "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Manager')]"
           }
@@ -810,8 +813,8 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('scripts').installDockerEE]",
-              "[variables('scripts').installUCP]"
+              "[parameters('scripts').installDockerEE]",
+              "[parameters('scripts').installUCP]"
             ],
             "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Manager')]"
           }
@@ -880,9 +883,9 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('scripts').installDockerEE]",
-              "[variables('scripts').installUCP]",
-              "[variables('scripts').installDTR]"
+              "[parameters('scripts').installDockerEE]",
+              "[parameters('scripts').installUCP]",
+              "[parameters('scripts').installDTR]"
             ],
             "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker', ' && sh install-dtr.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'dtr')).dnsSettings.fqdn)]"
           }
@@ -955,9 +958,9 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('scripts').installDockerEE]",
-              "[variables('scripts').installUCP]",
-              "[variables('scripts').installDTR]"
+              "[parameters('scripts').installDockerEE]",
+              "[parameters('scripts').installUCP]",
+              "[parameters('scripts').installDTR]"
             ],
             "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker', ' && sh install-dtr.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'dtr')).dnsSettings.fqdn)]"
           }
@@ -1030,8 +1033,8 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('scripts').installDockerEE]",
-              "[variables('scripts').installUCP]"
+              "[parameters('scripts').installDockerEE]",
+              "[parameters('scripts').installUCP]"
             ],
             "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker')]"
           }
