@@ -1,6 +1,6 @@
 # Docker Enterprise Edition on Azure Stack
 
-This ARM Template deploys the Docker EE platform into an Azure Stack environment. 
+This ARM Template deploys the Docker EE platform into an Azure Stack environment (Validated against 1802 build). 
 
 ![Docker Logo](https://www.docker.com/sites/default/files/horizontal.png)
 ![Azure Logo](https://vignette.wikia.nocookie.net/logopedia/images/f/fa/Microsoft_Azure.svg/revision/latest/scale-to-width-down/290?cb=20170928200148)
