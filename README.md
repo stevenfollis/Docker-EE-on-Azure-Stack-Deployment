@@ -44,7 +44,7 @@ The template comes in two variations:
 | Variation | Description | Status |
 | --- | --- | --- |
 | Single VM | Consists of one VM with UCP and DTR installed together | 0.1 |
-| HA | Consists of a 9 node, highly available cluster with separate load balancers for UCP, DTR, and Worker nodes | TBD |
+| HA | Consists of a 9 node, highly available cluster with separate load balancers for UCP, DTR, and Worker nodes | 0.2 |
 
 ## Resources
 * [Docker Reference Architecture: Docker EE Best Practices and Design Considerations](https://success.docker.com/article/Docker_Reference_Architecture-_Docker_EE_Best_Practices_and_Design_Considerations)
