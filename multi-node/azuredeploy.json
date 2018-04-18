@@ -23,6 +23,13 @@
         "installUCP": "https://raw.githubusercontent.com/Microsoft/Docker-EE-on-Azure-Stack-Deployment/master/multi-node/install-ucp.sh",
         "installDTR": "https://raw.githubusercontent.com/Microsoft/Docker-EE-on-Azure-Stack-Deployment/master/multi-node/install-dtr.sh"
       }
+    },
+    "credentials": {
+      "type": "object",
+      "defaultValue": {
+        "adminUsername": "admin",
+        "adminPassword": "Docker123!"
+      }
     }
   },
   "variables": {
@@ -704,8 +711,8 @@
         },
         "osProfile": {
           "computerName": "manager01",
-          "adminUsername": "eeadmin",
-          "adminPassword": "Docker123!"
+          "adminUsername": "[parameters('credentials').adminUsername]",
+          "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{
@@ -777,8 +784,8 @@
         },
         "osProfile": {
           "computerName": "[concat('manager', padLeft(copyIndex(2), 2, '0'))]",
-          "adminUsername": "eeadmin",
-          "adminPassword": "Docker123!"
+          "adminUsername": "[parameters('credentials').adminUsername]",
+          "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{
@@ -847,8 +854,8 @@
         },
         "osProfile": {
           "computerName": "dtr01",
-          "adminUsername": "eeadmin",
-          "adminPassword": "Docker123!"
+          "adminUsername": "[parameters('credentials').adminUsername]",
+          "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{
@@ -922,8 +929,8 @@
         },
         "osProfile": {
           "computerName": "[concat('dtr', padLeft(copyIndex(2), 2, '0'))]",
-          "adminUsername": "eeadmin",
-          "adminPassword": "Docker123!"
+          "adminUsername": "[parameters('credentials').adminUsername]",
+          "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{
@@ -997,8 +1004,8 @@
         },
         "osProfile": {
           "computerName": "[concat('worker-linux-', padLeft(copyIndex(1), 2, '0'))]",
-          "adminUsername": "eeadmin",
-          "adminPassword": "Docker123!"
+          "adminUsername": "[parameters('credentials').adminUsername]",
+          "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{
