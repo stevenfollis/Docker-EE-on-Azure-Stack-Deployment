@@ -613,6 +613,7 @@
         }]
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
         "[resourceId('Microsoft.Network/publicIPAddresses', concat('manager-', padLeft(copyIndex(1), 2, '0')))]",
         "[resourceId('Microsoft.Network/loadBalancers', 'ucp')]"
       ]
@@ -647,6 +648,7 @@
         }]
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
         "[resourceId('Microsoft.Network/publicIPAddresses', concat('dtr-', padLeft(copyIndex(1), 2, '0')))]",
         "[resourceId('Microsoft.Network/loadBalancers', 'dtr')]"
       ]
@@ -681,6 +683,7 @@
         }]
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
         "[resourceId('Microsoft.Network/publicIPAddresses', concat('worker-linux-', padLeft(copyIndex(1), 2, '0')))]",
         "[resourceId('Microsoft.Network/loadBalancers', 'apps')]"
       ]
