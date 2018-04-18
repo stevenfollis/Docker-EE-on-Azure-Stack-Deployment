@@ -27,7 +27,7 @@
     "credentials": {
       "type": "object",
       "defaultValue": {
-        "adminUsername": "admin",
+        "adminUsername": "eeadmin",
         "adminPassword": "Docker123!"
       }
     }
