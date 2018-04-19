@@ -23,6 +23,13 @@
         "installUCP": "https://raw.githubusercontent.com/Microsoft/Docker-EE-on-Azure-Stack-Deployment/master/multi-node/install-ucp.sh",
         "installDTR": "https://raw.githubusercontent.com/Microsoft/Docker-EE-on-Azure-Stack-Deployment/master/multi-node/install-dtr.sh"
       }
+    },
+    "credentials": {
+      "type": "object",
+      "defaultValue": {
+        "adminUsername": "eeadmin",
+        "adminPassword": "Docker123!"
+      }
     }
   },
   "variables": {
@@ -606,6 +613,7 @@
         }]
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
         "[resourceId('Microsoft.Network/publicIPAddresses', concat('manager-', padLeft(copyIndex(1), 2, '0')))]",
         "[resourceId('Microsoft.Network/loadBalancers', 'ucp')]"
       ]
@@ -640,6 +648,7 @@
         }]
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
         "[resourceId('Microsoft.Network/publicIPAddresses', concat('dtr-', padLeft(copyIndex(1), 2, '0')))]",
         "[resourceId('Microsoft.Network/loadBalancers', 'dtr')]"
       ]
@@ -674,6 +683,7 @@
         }]
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet')]",
         "[resourceId('Microsoft.Network/publicIPAddresses', concat('worker-linux-', padLeft(copyIndex(1), 2, '0')))]",
         "[resourceId('Microsoft.Network/loadBalancers', 'apps')]"
       ]
@@ -704,8 +714,8 @@
         },
         "osProfile": {
           "computerName": "manager01",
-          "adminUsername": "eeadmin",
-          "adminPassword": "Docker123!"
+          "adminUsername": "[parameters('credentials').adminUsername]",
+          "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{
@@ -777,8 +787,8 @@
         },
         "osProfile": {
           "computerName": "[concat('manager', padLeft(copyIndex(2), 2, '0'))]",
-          "adminUsername": "eeadmin",
-          "adminPassword": "Docker123!"
+          "adminUsername": "[parameters('credentials').adminUsername]",
+          "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{
@@ -847,8 +857,8 @@
         },
         "osProfile": {
           "computerName": "dtr01",
-          "adminUsername": "eeadmin",
-          "adminPassword": "Docker123!"
+          "adminUsername": "[parameters('credentials').adminUsername]",
+          "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{
@@ -922,8 +932,8 @@
         },
         "osProfile": {
           "computerName": "[concat('dtr', padLeft(copyIndex(2), 2, '0'))]",
-          "adminUsername": "eeadmin",
-          "adminPassword": "Docker123!"
+          "adminUsername": "[parameters('credentials').adminUsername]",
+          "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{
@@ -997,8 +1007,8 @@
         },
         "osProfile": {
           "computerName": "[concat('worker-linux-', padLeft(copyIndex(1), 2, '0'))]",
-          "adminUsername": "eeadmin",
-          "adminPassword": "Docker123!"
+          "adminUsername": "[parameters('credentials').adminUsername]",
+          "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{

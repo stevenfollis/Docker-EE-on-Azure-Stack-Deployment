@@ -17,6 +17,16 @@ This ARM Template deploys the Docker EE platform into an Azure Stack environment
 | `labName` | Provide a short, unique string to identify your deployment. | `docker-ee` |
 | `dockerEEURL` | This is the full URL for a subscription located at `store.docker.com`. | `https://storebits.docker.com/ee/m/sub-00000000-0000-0000-0000-000000000000` |
 
+### Default Template Values
+
+Many values are customizable via ARM Template Parameters or an adjustment to ARM Template Variables. Useful default values for this template include:
+
+| Property | Value|
+| --- | --- |
+| Admin Username | `eeadmin` |
+| Admin Password | `Docker123!` |
+| VNet Range | `10.0.0.0/16` |
+
 ### Installation via Azure Stack Portal
 
 An ARM Template can be deployed entirely via the Portal GUI and requires the least amount of configuration.
