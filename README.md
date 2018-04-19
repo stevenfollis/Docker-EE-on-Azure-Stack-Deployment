@@ -1,6 +1,6 @@
 # Docker Enterprise Edition on Azure Stack
 
-This ARM Template deploys the Docker EE platform into an Azure Stack environment. 
+This ARM Template deploys the Docker EE platform into an Azure Stack environment (Validated against 1802 build). 
 
 ![Docker Logo](https://www.docker.com/sites/default/files/horizontal.png)
 ![Azure Logo](https://vignette.wikia.nocookie.net/logopedia/images/f/fa/Microsoft_Azure.svg/revision/latest/scale-to-width-down/290?cb=20170928200148)
@@ -54,7 +54,7 @@ The template comes in two variations:
 | Variation | Description | Status |
 | --- | --- | --- |
 | Single VM | Consists of one VM with UCP and DTR installed together | 0.1 |
-| HA | Consists of a 9 node, highly available cluster with separate load balancers for UCP, DTR, and Worker nodes | TBD |
+| HA | Consists of a 9 node, highly available cluster with separate load balancers for UCP, DTR, and Worker nodes | 0.2 |
 
 ## Resources
 * [Docker Reference Architecture: Docker EE Best Practices and Design Considerations](https://success.docker.com/article/Docker_Reference_Architecture-_Docker_EE_Best_Practices_and_Design_Considerations)
