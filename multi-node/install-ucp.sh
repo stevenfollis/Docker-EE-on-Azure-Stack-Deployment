@@ -11,11 +11,11 @@ readonly APPS_LB_FQDN=$2
 # Is node a worker or manager?
 readonly NODE_ROLE=$3
 
+# Version of UCP to be installed
+readonly UCP_VERSION=$4
+
 # Name of current node
 readonly NODE_NAME=$(cat /etc/hostname)
-
-# Version of UCP to be installed
-readonly UCP_VERSION="3.0.0-beta3"
 
 # UCP Administrator Credentials
 readonly UCP_ADMIN="admin"
@@ -29,6 +29,8 @@ checkUCP() {
     # Check if UCP exists by attempting to hit its load balancer
     STATUS=$(curl --request GET --url "https://${UCP_FQDN}" --insecure --silent --output /dev/null -w '%{http_code}' --max-time 5)
     
+    echo "checkUCP: API status for ${UCP_FQDN} returned as: ${STATUS}"
+
     if [ "$STATUS" -eq 200 ]; then
         echo "checkUCP: Successfully queried the UCP API. UCP is installed. Joining node to existing cluster."
         joinUCP

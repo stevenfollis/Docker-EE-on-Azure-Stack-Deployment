@@ -30,6 +30,14 @@
         "adminUsername": "eeadmin",
         "adminPassword": "Docker123!"
       }
+    },
+    "versions": {
+      "type": "object",
+      "defaultValue": {
+        "engine": "stable-17.06",
+        "ucp": "latest",
+        "dtr": "latest"
+      }
     }
   },
   "variables": {
@@ -752,7 +760,7 @@
               "[parameters('scripts').installDockerEE]",
               "[parameters('scripts').installUCP]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Manager')]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' ', parameters('versions').engine, ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Manager ', parameters('versions').ucp)]"
           }
         }
       }]
@@ -826,78 +834,7 @@
               "[parameters('scripts').installDockerEE]",
               "[parameters('scripts').installUCP]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Manager')]"
-          }
-        }
-      }]
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "dtr-01",
-      "apiVersion": "[variables('api').virtualMachines]",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "VM - DTR01"
-      },
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "[variables('dtr').vmSize]"
-        },
-        "storageProfile": {
-          "imageReference": "[variables('dtr').imageReference]",
-          "osDisk": {
-            "name": "osdisk",
-            "diskSizeGB": 128,
-            "vhd": {
-              "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('shared').storage.name), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 'vhd', '/', 'dtr-01', '-osdisk.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
-          }
-        },
-        "osProfile": {
-          "computerName": "dtr01",
-          "adminUsername": "[parameters('credentials').adminUsername]",
-          "adminPassword": "[parameters('credentials').adminPassword]"
-        },
-        "networkProfile": {
-          "networkInterfaces": [{
-            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'dtr-01')]"
-          }]
-        },
-        "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'dtr')]"
-        }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/availabilitySets', variables('dtr').avSet)]",
-        "[resourceId('Microsoft.Network/networkInterfaces', 'dtr-01')]"
-      ],
-      "resources": [{
-        "name": "InstallDockerEE",
-        "type": "extensions",
-        "location": "[resourceGroup().location]",
-        "apiVersion": "[variables('api').virtualMachines]",
-        "dependsOn": [
-          "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'manager-01', 'InstallDockerEE')]",
-          "[resourceId('Microsoft.Compute/virtualMachines', 'dtr-01')]",
-          "[resourceId('Microsoft.Network/publicIPAddresses', 'dtr')]"
-        ],
-        "tags": {
-          "displayName": "InstallDocker"
-        },
-        "properties": {
-          "publisher": "Microsoft.Azure.Extensions",
-          "type": "CustomScript",
-          "typeHandlerVersion": "2.0",
-          "autoUpgradeMinorVersion": true,
-          "settings": {
-            "fileUris": [
-              "[parameters('scripts').installDockerEE]",
-              "[parameters('scripts').installUCP]",
-              "[parameters('scripts').installDTR]"
-            ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker', ' && sh install-dtr.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'dtr')).dnsSettings.fqdn)]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' ', parameters('versions').engine, ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Manager ', parameters('versions').ucp)]"
           }
         }
       }]
@@ -906,9 +843,9 @@
       "type": "Microsoft.Compute/virtualMachines",
       "copy": {
         "name": "VMCopy",
-        "count": "[sub(variables('dtr').instances, 1)]"
+        "count": "[variables('dtr').instances]"
       },
-      "name": "[concat('dtr-', padLeft(copyIndex(2), 2, '0'))]",
+      "name": "[concat('dtr-', padLeft(copyIndex(1), 2, '0'))]",
       "apiVersion": "[variables('api').virtualMachines]",
       "location": "[resourceGroup().location]",
       "tags": {
@@ -924,20 +861,20 @@
             "name": "osdisk",
             "diskSizeGB": 128,
             "vhd": {
-              "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('shared').storage.name), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 'vhd', '/', concat('dtr-', padLeft(copyIndex(2), 2, '0')), '-osdisk.vhd')]"
+              "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('shared').storage.name), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).primaryEndpoints.blob, 'vhd', '/', concat('dtr-', padLeft(copyIndex(1), 2, '0')), '-osdisk.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
           }
         },
         "osProfile": {
-          "computerName": "[concat('dtr', padLeft(copyIndex(2), 2, '0'))]",
+          "computerName": "[concat('dtr', padLeft(copyIndex(1), 2, '0'))]",
           "adminUsername": "[parameters('credentials').adminUsername]",
           "adminPassword": "[parameters('credentials').adminPassword]"
         },
         "networkProfile": {
           "networkInterfaces": [{
-            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('dtr-', padLeft(copyIndex(2), 2, '0')))]"
+            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('dtr-', padLeft(copyIndex(1), 2, '0')))]"
           }]
         },
         "availabilitySet": {
@@ -946,7 +883,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Compute/availabilitySets', variables('dtr').avSet)]",
-        "[resourceId('Microsoft.Network/networkInterfaces', concat('dtr-', padLeft(copyIndex(2), 2, '0')))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', concat('dtr-', padLeft(copyIndex(1), 2, '0')))]"
       ],
       "resources": [{
         "name": "InstallDockerEE",
@@ -954,8 +891,8 @@
         "location": "[resourceGroup().location]",
         "apiVersion": "[variables('api').virtualMachines]",
         "dependsOn": [
-          "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dtr-01', 'InstallDockerEE')]",
-          "[resourceId('Microsoft.Compute/virtualMachines', concat('dtr-', padLeft(copyIndex(2), 2, '0')))]",
+          "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'manager-01', 'InstallDockerEE')]",
+          "[resourceId('Microsoft.Compute/virtualMachines', concat('dtr-', padLeft(copyIndex(1), 2, '0')))]",
           "[resourceId('Microsoft.Network/publicIPAddresses', 'dtr')]"
         ],
         "tags": {
@@ -972,7 +909,7 @@
               "[parameters('scripts').installUCP]",
               "[parameters('scripts').installDTR]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker', ' && sh install-dtr.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'dtr')).dnsSettings.fqdn)]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh ', parameters('dockerEEURL'), ' ', parameters('versions').engine, ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker ', parameters('versions').ucp, ' && sh install-dtr.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'dtr')).dnsSettings.fqdn, ' ', parameters('versions').dtr)]"
           }
         }
       }]
@@ -1046,16 +983,28 @@
               "[parameters('scripts').installDockerEE]",
               "[parameters('scripts').installUCP]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker')]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' ', parameters('versions').engine, ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker ', parameters('versions').ucp)]"
           }
         }
       }]
     }
   ],
   "outputs": {
-    "ucpFQDN": {
+    "ucp_FQDN": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn]"
+      "value": "[concat('https://', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn)]"
+    },
+    "dtr_FQDN": {
+      "type": "string",
+      "value": "[concat('https://', reference(resourceId('Microsoft.Network/publicIPAddresses', 'dtr')).dnsSettings.fqdn)]"
+    },
+    "dtr_Storage_Account": {
+      "type": "string",
+      "value": "[variables('shared').storage.name]"
+    },
+    "dtr_Storage_Key": {
+      "type": "string",
+      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('shared').storage.name), '2016-12-01').keys[0].value]"
     }
   }
 }
