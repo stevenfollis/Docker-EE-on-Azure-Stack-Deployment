@@ -1004,7 +1004,7 @@
     },
     "dtr_Storage_Key": {
       "type": "string",
-      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('shared').storage.name), '2016-12-01').keys[0].value]"
+      "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('shared').storage.name), variables('api').storageAccounts).keys[0].value]"
     }
   }
 }
